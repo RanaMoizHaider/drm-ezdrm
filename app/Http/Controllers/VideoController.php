@@ -73,9 +73,14 @@ class VideoController extends Controller
         }
 
         // Generate signed URL for the .mpd manifest
-        $videoUrl = Storage::disk('s3')->temporaryUrl(
-            "encryptedvideos/{$folderName}/{$folderName}.mpd", now()->addMinutes(60)
-        );
+//        $videoUrl = Storage::disk('s3')->temporaryUrl(
+//            "encryptedvideos/{$folderName}/{$folderName}.mpd", now()->addMinutes(60)
+//        );
+
+        $videoUrl = Storage::disk('s3')->url("ezdrm/encryptedvideos/{$folderName}/{$folderName}.mpd");
+        $videoUrl = 'https://rmhnetflix.s3.amazonaws.com' . $videoUrl;
+
+        dd($videoUrl);
 
         return view('video.play', compact('videoUrl'));
     }
