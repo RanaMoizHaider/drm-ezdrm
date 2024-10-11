@@ -35,10 +35,12 @@
         <script src="https://cdn.dashjs.org/latest/dash.all.min.js"></script>
         <!-- Include videojs-contrib-dash -->
         <script src="https://unpkg.com/videojs-contrib-dash/dist/videojs-dash.js"></script>
+        <!-- Include videojs-contrib-eme -->
+        <script src="https://unpkg.com/videojs-contrib-eme/dist/videojs-contrib-eme.js"></script>
         <script>
             document.addEventListener('DOMContentLoaded', function () {
                 var player = videojs('video-player');
-
+                player.eme();
                 player.ready(function () {
                     player.src({
                         src: '{{ $videoUrl }}',
