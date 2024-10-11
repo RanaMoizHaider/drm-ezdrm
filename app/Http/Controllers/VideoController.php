@@ -79,8 +79,6 @@ class VideoController extends Controller
 
         $videoUrl = Storage::disk('s3')->url("ezdrm/encryptedvideos/{$folderName}/{$folderName}.mpd");
 
-        dd($videoUrl);
-
         return view('video.play', compact('videoUrl'));
     }
 }
