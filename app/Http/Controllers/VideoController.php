@@ -78,7 +78,6 @@ class VideoController extends Controller
 //        );
 
         $videoUrl = Storage::disk('s3')->url("ezdrm/encryptedvideos/{$folderName}/{$folderName}.mpd");
-        $videoUrl = 'https://rmhnetflix.s3.amazonaws.com' . $videoUrl;
 
         dd($videoUrl);
 
