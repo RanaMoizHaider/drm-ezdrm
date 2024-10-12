@@ -50,8 +50,8 @@
                                 name: 'com.widevine.alpha',
                                 options:{
                                     serverURL : 'https://widevine-dash.ezdrm.com/proxy?pX=D6A082',
-                                    audioRobustness: 'HW_SECURE_ALL',
-                                    videoRobustness: 'HW_SECURE_ALL'
+                                    audioRobustness: 'HW_SECURE_DECODE',
+                                    videoRobustness: 'HW_SECURE_DECODE'
                                 }
                             },
                             {
