@@ -1,4 +1,11 @@
 <?php
+/*!
+ * File: app/Http/Controllers/VideoController.php
+ * Description: This controller handles video-related operations such as listing, uploading, and playing videos stored in an S3 bucket.
+ * Author: Moiz Haider
+ * Date: 12 October 2024
+ */
+
 namespace App\Http\Controllers;
 
 use App\Jobs\SubmitMediaConvertJob;
@@ -12,23 +19,23 @@ class VideoController extends Controller
 {
     protected $mediaConvertService;
 
+    // Constructor to initialize MediaConvertService
     public function __construct(MediaConvertService $mediaConvertService)
     {
         $this->mediaConvertService = $mediaConvertService;
     }
 
-    // Index method to list all videos in S3
+    // List all videos in the "encryptedvideos" directory in S3
     public function index()
     {
-        // Fetch folder names from the "encryptedvideos" directory in S3 bucket
         $directories = Storage::disk('s3')->directories('ezdrm/encryptedvideos');
 
-        // Generate random tokens for each folder (stored in session for demo purposes)
+        // Generate random tokens for each folder and store them in the session
         $videos = [];
         foreach ($directories as $directory) {
-            $folderName = basename($directory); // Extract the folder name (video title)
+            $folderName = basename($directory);
             $token = Str::random(40);
-            session()->put($token, $folderName); // Store folder name in session with a token
+            session()->put($token, $folderName);
             $videos[] = [
                 'title' => $folderName,
                 'token' => $token,
@@ -38,11 +45,13 @@ class VideoController extends Controller
         return view('video.index', compact('videos'));
     }
 
+    // Show the video upload form
     public function showUploadForm()
     {
         return view('video.upload');
     }
 
+    // Handle video upload and dispatch a job to convert the video
     public function uploadVideo(Request $request)
     {
         $request->validate([
@@ -65,17 +74,13 @@ class VideoController extends Controller
         return redirect()->route('video.index');
     }
 
+    // Play the video by generating a signed URL for the .mpd manifest
     public function playVideo($token)
     {
         $folderName = session()->get($token);
         if (!$folderName) {
             abort(403, "Unauthorized access");
         }
-
-        // Generate signed URL for the .mpd manifest
-//        $videoUrl = Storage::disk('s3')->temporaryUrl(
-//            "encryptedvideos/{$folderName}/{$folderName}.mpd", now()->addMinutes(60)
-//        );
 
         $videoUrl = Storage::disk('s3')->url("ezdrm/encryptedvideos/{$folderName}/{$folderName}.mpd");
 
