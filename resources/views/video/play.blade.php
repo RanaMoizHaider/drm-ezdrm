@@ -136,15 +136,15 @@
                         // Optional: Parse the response if needed
                     }
                 });
+
+                // Configure the player
+                player.configure(playerConfig);
+
+                // Load the content
+                player.load(contentUri).then(function () {
+                    console.log('The video has now been loaded!');
+                }).catch(onError); // Handle load errors
             }
-
-            // Configure the player
-            player.configure(playerConfig);
-
-            // Load the content
-            player.load(contentUri).then(function () {
-                console.log('The video has now been loaded!');
-            }).catch(onError); // Handle load errors
 
             function onErrorEvent(event) {
                 // Extract the shaka.util.Error object from the event.
