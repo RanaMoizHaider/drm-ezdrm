@@ -144,6 +144,7 @@ function initPlayer() {
 		});
 	}
 
+    console.log(player);
 	// Try to load a manifest.
 	// This is an asynchronous process.
 	player.load(contentUri).then(function() {
