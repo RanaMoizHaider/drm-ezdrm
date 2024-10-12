@@ -86,7 +86,7 @@
                             },
                             advanced: {
                                 'com.widevine.alpha': {
-                                    'videoRobustness': 'SW_SECURE_DECODE',
+                                    'videoRobustness': 'SW_SECURE_CRYPTO',
                                     'audioRobustness': 'SW_SECURE_CRYPTO'
                                 }
                             }
