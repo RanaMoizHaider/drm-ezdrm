@@ -87,7 +87,7 @@
                                 },
                                 advanced: {
                                     'com.widevine.alpha': {
-                                        'videoRobustness': 'HW_SECURE_ALL',
+                                        'videoRobustness': 'HW_SECURE_DECODE',
                                         'audioRobustness': 'HW_SECURE_CRYPTO'
                                     }
                                 }
@@ -102,12 +102,6 @@
                             }
                         };
                     }
-
-                    player.getNetworkingEngine().registerRequestFilter(function (type, request) {
-                        if (type == shaka.net.NetworkingEngine.RequestType.LICENSE) {
-                            // Optional: Add headers or modify the request
-                        }
-                    });
                 } else if (drmType === 'Playready') {
                     // PlayReady configuration if needed
                     playerConfig = {
@@ -117,21 +111,9 @@
                             }
                         }
                     };
-
-                    player.getNetworkingEngine().registerRequestFilter(function (type, request) {
-                        if (type == shaka.net.NetworkingEngine.RequestType.LICENSE) {
-                            // Optional: Add headers or modify the request
-                        }
-                    });
                 } else {
                     console.error('No DRM configuration found.');
                 }
-
-                player.getNetworkingEngine().registerResponseFilter(function (type, response) {
-                    if (type == shaka.net.NetworkingEngine.RequestType.LICENSE) {
-                        // Optional: Parse the response if needed
-                    }
-                });
 
                 // Configure the player
                 player.configure(playerConfig);
