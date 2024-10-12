@@ -41,27 +41,25 @@
             document.addEventListener('DOMContentLoaded', function () {
                 var player = videojs('video-player');
                 player.eme();
+                player.eme.detectSupportedCDMs()
+                    .then(supportedCDMs => {
+                        console.log(supportedCDMs);
+                    });
                 player.ready(function () {
                     player.src({
                         src: '{{ $videoUrl }}',
                         type: 'application/dash+xml',
-                        keySystemOptions: [
-                            {
-                                name: 'com.widevine.alpha',
-                                options:{
-                                    serverURL : 'https://widevine-dash.ezdrm.com/proxy?pX=D6A082',
-                                    audioRobustness: 'HW_SECURE_DECODE',
-                                    videoRobustness: 'HW_SECURE_DECODE'
-                                }
+                        keySystems: {
+                            'com.widevine.alpha': {
+                                url: 'https://widevine-dash.ezdrm.com/proxy?pX=D6A082',
+                                audioRobustness: 'HW_SECURE_DECODE',
+                                videoRobustness: 'HW_SECURE_DECODE'
                             },
-                            {
-                                name: 'com.microsoft.playready',
-                                options:{
-                                    serverURL : 'https://playready.ezdrm.com/cency/preauth.aspx?pX=2AFB63'
+                            'com.microsoft.playready': {
+                                url: 'https://playready.ezdrm.com/cency/preauth.aspx?pX=2AFB63'
 
-                                }
                             }
-                        ]
+                        }
                     });
                 });
             });
