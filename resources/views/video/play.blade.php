@@ -51,12 +51,12 @@
                         type: 'application/dash+xml',
                         keySystems: {
                             'com.widevine.alpha': {
-                                url: 'https://widevine-dash.ezdrm.com/proxy?pX=D6A082',
+                                licenseUri: 'https://widevine-dash.ezdrm.com/proxy?pX=D6A082',
                                 audioRobustness: 'HW_SECURE_DECODE',
                                 videoRobustness: 'HW_SECURE_DECODE'
                             },
                             'com.microsoft.playready': {
-                                url: 'https://playready.ezdrm.com/cency/preauth.aspx?pX=2AFB63'
+                                licenseUri: 'https://playready.ezdrm.com/cency/preauth.aspx?pX=2AFB63'
 
                             }
                         }
