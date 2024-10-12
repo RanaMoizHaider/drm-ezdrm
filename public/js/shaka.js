@@ -144,7 +144,6 @@ function initPlayer() {
 		});
 	}
 
-    console.log(player);
 	// Try to load a manifest.
 	// This is an asynchronous process.
 	player.load(contentUri).then(function() {
@@ -185,6 +184,7 @@ function onErrorEvent(event) {
 function onError(error) {
 	// Log the error.
 	console.error('Error code', error.code, 'object', error);
+    alert('Error code ' + error.code + ' object ' + error);
 }
 
 checkBrowser();
