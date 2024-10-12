@@ -41,7 +41,7 @@ class MediaConvertService
                                 'CodecSettings' => [
                                     'Codec' => 'H_264',
                                     'H264Settings' => [
-                                        'MaxBitrate' => 128000,
+                                        'MaxBitrate' => 50000000,
                                         'RateControlMode' => 'QVBR',
                                         'SceneChangeDetect' => 'TRANSITION_DETECTION',
                                     ],
@@ -58,7 +58,7 @@ class MediaConvertService
                                     'CodecSettings' => [
                                         'Codec' => 'AAC',
                                         'AacSettings' => [
-                                            'Bitrate' => 96000,
+                                            'Bitrate' => 256000,
                                             'CodingMode' => 'CODING_MODE_2_0',
                                             'SampleRate' => 48000,
                                         ],
