@@ -9,11 +9,6 @@
 
     <x-slot:title>Play Video</x-slot:title>
 
-    <x-slot:styles>
-        <!-- Shaka Player UI CSS -->
-        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.11.7/controls.min.css">
-    </x-slot:styles>
-
     <div class="flex justify-center items-center">
         <div id="video-container" class="relative w-full md:w-2/3 lg:w-1/2">
             <!-- Shaka Player video element -->
@@ -22,67 +17,160 @@
     </div>
 
     <x-slot:scripts>
-        <!-- Shaka Player UI JS -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.11.7/shaka-player.ui.min.js"></script>
+        <script src="{{ asset('js/shaka-compiled.min.js') }}"></script>
         <script>
-            document.addEventListener('DOMContentLoaded', initApp);
+            // Define your variables and URLs
+            let drmType = ''; // Will be set based on device/browser
+            let certificate; // For FairPlay
+            let dashUri = '{{ $videoUrl }}'; // Replace with your DASH manifest URL
+            let hlsUri = '{{ $videoUrl }}'; // Replace with your HLS manifest URL (for FairPlay)
+            let fairplayCertUrl = 'YOUR_FAIRPLAY_CERTIFICATE_URL'; // Replace with your FairPlay certificate URL
+            let fairplayLicenseUrl = 'YOUR_FAIRPLAY_LICENSE_URL'; // Replace with your FairPlay license server URL
+            let widevineLicenseUrl = 'YOUR_WIDEVINE_LICENSE_URL'; // Replace with your Widevine license server URL
+            let playreadyLicenseUrl = 'YOUR_PLAYREADY_LICENSE_URL'; // Replace with your PlayReady license server URL
 
-            async function initApp() {
-                // Install built-in polyfills to patch browser incompatibilities.
-                shaka.polyfill.installAll();
-
-                // Check if the browser supports the basic APIs Shaka needs.
-                if (shaka.Player.isBrowserSupported()) {
-                    console.log('The browser is supported!');
-                    // Everything looks good!
-                    await initPlayer();
+            function initApp() {
+                // Detect DRM type based on device/browser
+                if (isSafari()) {
+                    drmType = 'FairPlay';
+                    loadCertificate();
                 } else {
-                    // This browser does not have the minimum set of APIs we need.
-                    console.error('Browser not supported!');
+                    drmType = 'Widevine';
+                    // Install built-in polyfills to patch browser incompatibilities.
+                    shaka.polyfill.installAll();
+
+                    // Check if the browser supports the basic APIs Shaka needs.
+                    if (shaka.Player.isBrowserSupported()) {
+                        // Everything looks good!
+                        initPlayer();
+                    } else {
+                        console.error('Browser not supported!');
+                    }
                 }
             }
 
-            async function initPlayer() {
-                // Create a Player instance without arguments.
-                var video = document.getElementById('video-player');
-                var videoContainer = document.getElementById('video-container');
+            function isSafari() {
+                return /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+            }
 
-                var player = new shaka.Player();
-                var ui = new shaka.ui.Overlay(player, videoContainer, video);
+            function isAndroid() {
+                return /Android/i.test(navigator.userAgent);
+            }
 
-                // Attach player and UI to the window for easy access in the JS console.
+            function initPlayer() {
+                let contentUri, playerConfig;
+                // Create a Player instance.
+                const video = document.getElementById('video-player');
+                let player = new shaka.Player(video);
+
+                // Attach player to the window to make it easy to access in the JS console.
                 window.player = player;
-                window.ui = ui;
 
                 // Listen for error events.
                 player.addEventListener('error', onErrorEvent);
 
-                // Configure DRM servers and robustness.
-                player.configure({
-                    drm: {
-                        servers: {
-                            'com.widevine.alpha': 'https://widevine-dash.ezdrm.com/proxy?pX=D6A082',
-                            'com.microsoft.playready': 'https://playready.ezdrm.com/cency/preauth.aspx?pX=2AFB63'
-                        },
-                        advanced: {
-                            'com.widevine.alpha': {
-                                'videoRobustness': 'SW_SECURE_DECODE',
-                                'audioRobustness': 'SW_SECURE_DECODE'
+                if ('FairPlay' === drmType) {
+                    contentUri = hlsUri;
+
+                    playerConfig = {
+                        drm: {
+                            servers: {
+                                'com.apple.fps.1_0': fairplayLicenseUrl
+                            },
+                            advanced: {
+                                'com.apple.fps.1_0': {
+                                    serverCertificate: certificate
+                                }
+                            },
+                            initDataTransform: function (initData) {
+                                const skdUri = shaka.util.StringUtils.fromBytesAutoDetect(initData);
+                                const contentId = skdUri.substring(skdUri.indexOf('skd://') + 6);
+                                const cert = player.drmInfo().serverCertificate;
+                                return shaka.util.FairPlayUtils.initDataTransform(initData, contentId, cert);
                             }
                         }
+                    };
+
+                    player.getNetworkingEngine().registerRequestFilter(function (type, request) {
+                        if (type == shaka.net.NetworkingEngine.RequestType.LICENSE) {
+                            const originalPayload = new Uint8Array(request.body);
+                            const base64Payload = shaka.util.Uint8ArrayUtils.toBase64(originalPayload);
+                            const params = 'spc=' + encodeURIComponent(base64Payload);
+                            request.body = shaka.util.StringUtils.toUTF8(params);
+                            request.headers['Content-Type'] = 'application/x-www-form-urlencoded';
+                        }
+                    });
+
+                    player.getNetworkingEngine().registerResponseFilter(function (type, response) {
+                        if (type == shaka.net.NetworkingEngine.RequestType.LICENSE) {
+                            const responseText = shaka.util.StringUtils.fromUTF8(response.data).trim();
+                            response.data = shaka.util.Uint8ArrayUtils.fromBase64(responseText).buffer;
+                        }
+                    });
+                } else {
+                    contentUri = dashUri;
+
+                    if ('Widevine' === drmType) {
+                        if (isAndroid()) {
+                            playerConfig = {
+                                drm: {
+                                    servers: {
+                                        'com.widevine.alpha': widevineLicenseUrl
+                                    },
+                                    advanced: {
+                                        'com.widevine.alpha': {
+                                            'videoRobustness': 'HW_SECURE_ALL',
+                                            'audioRobustness': 'HW_SECURE_CRYPTO'
+                                        }
+                                    }
+                                }
+                            };
+                        } else {
+                            playerConfig = {
+                                drm: {
+                                    servers: {
+                                        'com.widevine.alpha': widevineLicenseUrl
+                                    }
+                                }
+                            };
+                        }
+
+                        player.getNetworkingEngine().registerRequestFilter(function (type, request) {
+                            if (type == shaka.net.NetworkingEngine.RequestType.LICENSE) {
+                                // Optional: Add headers or modify the request
+                            }
+                        });
+                    } else {
+                        // PlayReady configuration if needed
+                        playerConfig = {
+                            drm: {
+                                servers: {
+                                    'com.microsoft.playready': playreadyLicenseUrl
+                                }
+                            }
+                        };
+
+                        player.getNetworkingEngine().registerRequestFilter(function (type, request) {
+                            if (type == shaka.net.NetworkingEngine.RequestType.LICENSE) {
+                                // Optional: Add headers or modify the request
+                            }
+                        });
                     }
-                });
 
-                try {
-                    // Attach the player to the video element.
-                    await player.attach(video);
-
-                    // Load the manifest URI.
-                    await player.load('{{ $videoUrl }}');
-                    console.log('The video has now been loaded!');
-                } catch (error) {
-                    onError(error);
+                    player.getNetworkingEngine().registerResponseFilter(function (type, response) {
+                        if (type == shaka.net.NetworkingEngine.RequestType.LICENSE) {
+                            // Optional: Parse the response if needed
+                        }
+                    });
                 }
+
+                // Configure the player
+                player.configure(playerConfig);
+
+                // Load the content
+                player.load(contentUri).then(function () {
+                    console.log('The video has now been loaded!');
+                }).catch(onError); // Handle load errors
             }
 
             function onErrorEvent(event) {
@@ -94,6 +182,29 @@
                 // Log the error.
                 console.error('Error code', error.code, 'object', error);
             }
+
+            // FairPlay-specific functions
+            function loadCertificate() {
+                var request = new XMLHttpRequest();
+                request.responseType = 'arraybuffer';
+                request.addEventListener('load', onCertificateLoaded, false);
+                request.addEventListener('error', onCertificateError, false);
+                request.open('GET', fairplayCertUrl, true);
+                request.send();
+            }
+
+            function onCertificateLoaded(event) {
+                var request = event.target;
+                certificate = new Uint8Array(request.response);
+                initPlayer(); // Start the player after the certificate is loaded
+            }
+
+            function onCertificateError(event) {
+                console.error('Failed to retrieve the server certificate.');
+            }
+
+            // Start the application
+            document.addEventListener('DOMContentLoaded', initApp);
         </script>
     </x-slot:scripts>
 
