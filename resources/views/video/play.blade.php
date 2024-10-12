@@ -85,8 +85,8 @@
                 initApp();
             }
         </script>
-        <script src="{{ asset('js/helper.js') }}"></script>
-        <script src="{{ asset('js/shaka.js') }}"></script>
+        <script src="{{ asset('js/jshelper.js') }}"></script>
+        <script src="{{ asset('js/jsshaka.js') }}"></script>
     </x-slot:scripts>
 
 </x-layouts.app>
