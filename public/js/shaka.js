@@ -29,8 +29,6 @@ function isAndroid() {
 
 function initPlayer() {
 	let contentUri, playerConfig;
-	// Create a Player instance.
-	const video = document.getElementById('my-player');
 	let player = new shaka.Player();
 
     player.attach(video);
@@ -97,8 +95,8 @@ function initPlayer() {
 						},
 						advanced: {
 							'com.widevine.alpha': {
-								'videoRobustness': 'HW_SECURE_ALL',
-								'audioRobustness': 'HW_SECURE_CRYPTO'
+								'videoRobustness': videoR,
+								'audioRobustness': audioR
 							}
 						}
 					}
