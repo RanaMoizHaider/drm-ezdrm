@@ -64,11 +64,10 @@
                             'com.widevine.alpha': 'https://widevine-dash.ezdrm.com/proxy?pX=D6A082',
                             'com.microsoft.playready': 'https://playready.ezdrm.com/cency/preauth.aspx?pX=2AFB63'
                         },
-                        // Optionally, adjust robustness levels. Start with empty strings.
                         advanced: {
                             'com.widevine.alpha': {
-                                'videoRobustness': '', // Use default robustness level
-                                'audioRobustness': ''
+                                'videoRobustness': 'SW_SECURE_DECODE',
+                                'audioRobustness': 'SW_SECURE_DECODE'
                             }
                         }
                     }
