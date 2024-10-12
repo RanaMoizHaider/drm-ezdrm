@@ -13,7 +13,7 @@
         <div id="video-container" class="relative w-full md:w-2/3 lg:w-1/2">
 
             <!-- Shaka Player video element -->
-            <video id="video-player" width="640" controls></video>
+            <video id="my-player" width="640" controls></video>
 
             <span id="browserCheckResult"></span>
 
