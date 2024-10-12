@@ -30,7 +30,7 @@ function isAndroid() {
 function initPlayer() {
 	let contentUri, playerConfig;
 	// Create a Player instance.
-	const video = document.getElementById('video-player');
+	const video = document.getElementById('my-player');
 	let player = new shaka.Player();
 
     player.attach(video);
