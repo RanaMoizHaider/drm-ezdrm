@@ -87,6 +87,13 @@ function initPlayer() {
 	} else {
 		contentUri = dashUri;
 		if ('Widevine' === drmType) {
+            $(document).ready(function() {
+                setTimeout(function() { gettime("Loading MPEG-DASH stream"); }, 500);
+                setTimeout(function() { gettime("Detecting CENC"); }, 1000);
+                setTimeout(function() { gettime("Calling Widevine License URL"); }, 2000);
+                setTimeout(function() { gettime("CENC License Acquired with v: " + videoR + " and a: " + audioR); }, 4000);
+                setTimeout(function() { gettime("<font color='red'>Press Play to Begin Playback</font>"); }, 6000);
+            });
 			if (isAndroid()) {
 				playerConfig = {
 					drm: {
@@ -118,6 +125,13 @@ function initPlayer() {
 				}
 			});
 		} else {
+            $(document).ready(function() {
+                setTimeout(function() { gettime("Loading MPEG-DASH stream"); }, 500);
+                setTimeout(function() { gettime("Detecting CENC"); }, 1000);
+                setTimeout(function() { gettime("Calling PlayReady License URL"); }, 2000);
+                setTimeout(function() { gettime("CENC License Acquired"); }, 4000);
+                setTimeout(function() { gettime("<font color='red'>Press Play to Begin Playback</font>"); }, 6000);
+            });
 			playerConfig = {
 				drm: {
 					servers: {
@@ -157,7 +171,7 @@ function parsingResponse(response) {
 	// Trim whitespace.
 	responseText = responseText.trim();
 
-	console.log('responseText :: ', responseText);
+	// console.log('responseText :: ', responseText);
 
 	try {
 		const drmconObj = JSON.parse(responseText);

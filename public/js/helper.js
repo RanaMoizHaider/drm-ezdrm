@@ -48,25 +48,6 @@ function checkBrowser() {
 	document.getElementById("browserCheckResult").innerHTML = result;
 	console.log(result);
 
-	if ('Widevine' === drmType) {
-		$(document).ready(function() {
-			setTimeout(function() { gettime("Loading MPEG-DASH stream"); }, 500);
-			setTimeout(function() { gettime("Detecting CENC"); }, 1000);
-			setTimeout(function() { gettime("Calling Widevine License URL"); }, 2000);
-			setTimeout(function() { gettime("CENC License Acquired with v: " + videoR + " and a: " + audioR); }, 4000);
-			setTimeout(function() { gettime("<font color='red'>Press Play to Begin Playback</font>"); }, 6000);
-		});
-	}
-	if ('PlayReady' === drmType) {
-		$(document).ready(function() {
-			setTimeout(function() { gettime("Loading MPEG-DASH stream"); }, 500);
-			setTimeout(function() { gettime("Detecting CENC"); }, 1000);
-			setTimeout(function() { gettime("Calling PlayReady License URL"); }, 2000);
-			setTimeout(function() { gettime("CENC License Acquired"); }, 4000);
-			setTimeout(function() { gettime("<font color='red'>Press Play to Begin Playback</font>"); }, 6000);
-		});
-	}
-
 	return browser;
 }
 
