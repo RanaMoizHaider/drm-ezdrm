@@ -94,7 +94,7 @@ function initPlayer() {
                 setTimeout(function() { gettime("CENC License Acquired with v: " + videoR + " and a: " + audioR); }, 4000);
                 setTimeout(function() { gettime("<font color='red'>Press Play to Begin Playback</font>"); }, 6000);
             });
-			if (isAndroid()) {
+			// if (isAndroid()) {
 				playerConfig = {
 					drm: {
 						servers: {
@@ -108,15 +108,15 @@ function initPlayer() {
 						}
 					}
 				};
-			} else {
-				playerConfig = {
-					drm: {
-						servers: {
-							'com.widevine.alpha': widevineLicenseUrl
-						}
-					}
-				};
-			}
+			// } else {
+			// 	playerConfig = {
+			// 		drm: {
+			// 			servers: {
+			// 				'com.widevine.alpha': widevineLicenseUrl
+			// 			}
+			// 		}
+			// 	};
+			// }
 
 			player.getNetworkingEngine().registerRequestFilter(function(type, request) {
 				// Only add headers to license requests:
