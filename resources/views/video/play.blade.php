@@ -122,6 +122,7 @@
             function onError(error) {
                 // Log the error.
                 console.error('Error code', error.code, 'object', error);
+                alert('An error occurred: ' + error.message);
             }
 
             // Start the application
