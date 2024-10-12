@@ -1,4 +1,11 @@
 <?php
+/*!
+ * File: app/Services/MediaConvertService.php
+ * Description: This service handles interactions with AWS MediaConvert, including creating and monitoring video conversion jobs.
+ * Author: Moiz Haider
+ * Date: 12 October 2024
+ */
+
 namespace App\Services;
 
 use Aws\MediaConvert\MediaConvertClient;
@@ -8,9 +15,9 @@ class MediaConvertService
 {
     protected MediaConvertClient $mediaConvertClient;
 
+    // Constructor to initialize AWS MediaConvert client with configuration values
     public function __construct()
     {
-        // Initialize AWS MediaConvert client with config values
         $this->mediaConvertClient = new MediaConvertClient([
             'region' => config('services.aws.region'),
             'version' => '2017-08-29',
@@ -22,6 +29,7 @@ class MediaConvertService
         ]);
     }
 
+    // Create a MediaConvert job with specified input and output paths
     public function createMediaConvertJob($filePath, $inputPath, $outputPath)
     {
         $jobSettings = [
@@ -129,6 +137,8 @@ class MediaConvertService
             throw new \Exception('Error creating MediaConvert job: ' . $e->getMessage());
         }
     }
+
+    // Retrieve the status of a MediaConvert job by its ID
     public function getJobStatus($jobId)
     {
         try {

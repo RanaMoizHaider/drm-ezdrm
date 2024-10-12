@@ -17,48 +17,32 @@
 
             <span id="browserCheckResult"></span>
 
-            <div style="min-height:120px;">
-                <span id="log"></span>
-            </div>
-
-            <!-- Radio buttons for video robustness levels -->
+            <!-- Dropdown for video robustness levels -->
             <div class="mt-4">
                 <h4>Select Video Robustness:</h4>
-                <label>
-                    <input type="radio" name="videoR" value="SW_SECURE_CRYPTO" onclick="updateSettings()"> SW_SECURE_CRYPTO
-                </label>
-                <label>
-                    <input type="radio" name="videoR" value="SW_SECURE_DECODE" onclick="updateSettings()"> SW_SECURE_DECODE
-                </label>
-                <label>
-                    <input type="radio" name="videoR" value="HW_SECURE_CRYPTO" onclick="updateSettings()"> HW_SECURE_CRYPTO
-                </label>
-                <label>
-                    <input type="radio" name="videoR" value="HW_SECURE_DECODE" onclick="updateSettings()"> HW_SECURE_DECODE
-                </label>
-                <label>
-                    <input type="radio" name="videoR" value="HW_SECURE_ALL" checked onclick="updateSettings()"> HW_SECURE_ALL
-                </label>
+                <select id="videoR" onchange="updateSettings()">
+                    <option value="SW_SECURE_CRYPTO">SW_SECURE_CRYPTO</option>
+                    <option value="SW_SECURE_DECODE">SW_SECURE_DECODE</option>
+                    <option value="HW_SECURE_CRYPTO">HW_SECURE_CRYPTO</option>
+                    <option value="HW_SECURE_DECODE">HW_SECURE_DECODE</option>
+                    <option value="HW_SECURE_ALL" selected>HW_SECURE_ALL</option>
+                </select>
             </div>
 
-            <!-- Radio buttons for audio robustness levels -->
+            <!-- Dropdown for audio robustness levels -->
             <div class="mt-4">
                 <h4>Select Audio Robustness:</h4>
-                <label>
-                    <input type="radio" name="audioR" value="SW_SECURE_CRYPTO" onclick="updateSettings()"> SW_SECURE_CRYPTO
-                </label>
-                <label>
-                    <input type="radio" name="audioR" value="SW_SECURE_DECODE" onclick="updateSettings()"> SW_SECURE_DECODE
-                </label>
-                <label>
-                    <input type="radio" name="audioR" value="HW_SECURE_CRYPTO" checked onclick="updateSettings()"> HW_SECURE_CRYPTO
-                </label>
-                <label>
-                    <input type="radio" name="audioR" value="HW_SECURE_DECODE" onclick="updateSettings()"> HW_SECURE_DECODE
-                </label>
-                <label>
-                    <input type="radio" name="audioR" value="HW_SECURE_ALL" onclick="updateSettings()"> HW_SECURE_ALL
-                </label>
+                <select id="audioR" onchange="updateSettings()">
+                    <option value="SW_SECURE_CRYPTO">SW_SECURE_CRYPTO</option>
+                    <option value="SW_SECURE_DECODE">SW_SECURE_DECODE</option>
+                    <option value="HW_SECURE_CRYPTO" selected>HW_SECURE_CRYPTO</option>
+                    <option value="HW_SECURE_DECODE">HW_SECURE_DECODE</option>
+                    <option value="HW_SECURE_ALL">HW_SECURE_ALL</option>
+                </select>
+            </div>
+
+            <div style="min-height:120px;">
+                <span id="log"></span>
             </div>
 
         </div>
@@ -78,15 +62,15 @@
             let audioR = 'HW_SECURE_CRYPTO';
 
             function updateSettings() {
-                videoR = document.querySelector('input[name="videoR"]:checked').value;
-                audioR = document.querySelector('input[name="audioR"]:checked').value;
+                videoR = document.getElementById('videoR').value;
+                audioR = document.getElementById('audioR').value;
 
                 // Reinitialize the player
                 initApp();
             }
         </script>
-        <script src="{{ asset('js/jshelper.js') }}"></script>
-        <script src="{{ asset('js/jsshaka.js') }}"></script>
+        <script src="{{ asset('js/helper.js') }}"></script>
+        <script src="{{ asset('js/shaka.js') }}"></script>
     </x-slot:scripts>
 
 </x-layouts.app>
