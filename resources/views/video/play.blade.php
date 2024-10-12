@@ -24,8 +24,6 @@
             let certificate; // For FairPlay
             let dashUri = '{{ $videoUrl }}'; // Replace with your DASH manifest URL
             let hlsUri = '{{ $videoUrl }}'; // Replace with your HLS manifest URL (for FairPlay)
-            let fairplayCertUrl = 'YOUR_FAIRPLAY_CERTIFICATE_URL'; // Replace with your FairPlay certificate URL
-            let fairplayLicenseUrl = 'YOUR_FAIRPLAY_LICENSE_URL'; // Replace with your FairPlay license server URL
             let widevineLicenseUrl = 'https://widevine-dash.ezdrm.com/proxy?pX=D6A082'; // Replace with your Widevine license server URL
             let playreadyLicenseUrl = 'https://playready.ezdrm.com/cency/preauth.aspx?pX=2AFB63'; // Replace with your PlayReady license server URL
 
@@ -41,7 +39,7 @@
 
                     } else if (support.drm['com.microsoft.playready']) {
                         console.log('PlayReady is supported!');
-                        drmType = 'PlayReady';
+                        drmType = 'Playready';
 
                     } else {
                         console.log('No available DRM Supported.');
@@ -57,10 +55,6 @@
                 } else {
                     console.error('Browser not supported!');
                 }
-            }
-
-            function isSafari() {
-                return /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
             }
 
             function isAndroid() {
@@ -82,7 +76,9 @@
 
                 contentUri = dashUri;
 
-                if ('Widevine' === drmType) {
+                console.log('DRM type: ', drmType);
+
+                if (drmType === 'Widevine') {
                     if (isAndroid()) {
                         playerConfig = {
                             drm: {
@@ -112,7 +108,7 @@
                             // Optional: Add headers or modify the request
                         }
                     });
-                } else if ('Playready' === drmType) {
+                } else if (drmType === 'Playready') {
                     // PlayReady configuration if needed
                     playerConfig = {
                         drm: {
