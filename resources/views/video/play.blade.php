@@ -44,17 +44,17 @@
                     } else {
                         console.log('No available DRM Supported.');
                     }
+
+                    // Check if the browser supports the basic APIs Shaka needs.
+                    if (shaka.Player.isBrowserSupported()) {
+                        // Everything looks good!
+                        initPlayer();
+                    } else {
+                        console.error('Browser not supported!');
+                    }
                 }).catch(function(error) {
                     console.error('Error probing DRM support:', error);
                 });
-
-                // Check if the browser supports the basic APIs Shaka needs.
-                if (shaka.Player.isBrowserSupported()) {
-                    // Everything looks good!
-                    initPlayer();
-                } else {
-                    console.error('Browser not supported!');
-                }
             }
 
             function isAndroid() {
