@@ -26,8 +26,8 @@
             let hlsUri = '{{ $videoUrl }}'; // Replace with your HLS manifest URL (for FairPlay)
             let fairplayCertUrl = 'YOUR_FAIRPLAY_CERTIFICATE_URL'; // Replace with your FairPlay certificate URL
             let fairplayLicenseUrl = 'YOUR_FAIRPLAY_LICENSE_URL'; // Replace with your FairPlay license server URL
-            let widevineLicenseUrl = 'YOUR_WIDEVINE_LICENSE_URL'; // Replace with your Widevine license server URL
-            let playreadyLicenseUrl = 'YOUR_PLAYREADY_LICENSE_URL'; // Replace with your PlayReady license server URL
+            let widevineLicenseUrl = 'https://widevine-dash.ezdrm.com/proxy?pX=D6A082'; // Replace with your Widevine license server URL
+            let playreadyLicenseUrl = 'https://playready.ezdrm.com/cency/preauth.aspx?pX=2AFB63'; // Replace with your PlayReady license server URL
 
             function initApp() {
                 // Detect DRM type based on device/browser
