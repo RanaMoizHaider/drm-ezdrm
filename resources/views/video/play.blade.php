@@ -27,26 +27,27 @@
         <script>
             document.addEventListener('DOMContentLoaded', initApp);
 
-            function initApp() {
+            async function initApp() {
                 // Install built-in polyfills to patch browser incompatibilities.
                 shaka.polyfill.installAll();
 
                 // Check if the browser supports the basic APIs Shaka needs.
                 if (shaka.Player.isBrowserSupported()) {
+                    console.log('The browser is supported!');
                     // Everything looks good!
-                    initPlayer();
+                    await initPlayer();
                 } else {
                     // This browser does not have the minimum set of APIs we need.
                     console.error('Browser not supported!');
                 }
             }
 
-            function initPlayer() {
-                // Create a Player instance.
+            async function initPlayer() {
+                // Create a Player instance without arguments.
                 var video = document.getElementById('video-player');
                 var videoContainer = document.getElementById('video-container');
 
-                var player = new shaka.Player(video);
+                var player = new shaka.Player();
                 var ui = new shaka.ui.Overlay(player, videoContainer, video);
 
                 // Attach player and UI to the window for easy access in the JS console.
@@ -63,20 +64,26 @@
                             'com.widevine.alpha': 'https://widevine-dash.ezdrm.com/proxy?pX=D6A082',
                             'com.microsoft.playready': 'https://playready.ezdrm.com/cency/preauth.aspx?pX=2AFB63'
                         },
+                        // Optionally, adjust robustness levels. Start with empty strings.
                         advanced: {
                             'com.widevine.alpha': {
-                                'videoRobustness': 'HW_SECURE_DECODE',
-                                'audioRobustness': 'HW_SECURE_DECODE'
+                                'videoRobustness': '', // Use default robustness level
+                                'audioRobustness': ''
                             }
                         }
                     }
                 });
 
-                // Load the manifest URI.
-                player.load('{{ $videoUrl }}').then(function() {
-                    // The video has now been loaded.
+                try {
+                    // Attach the player to the video element.
+                    await player.attach(video);
+
+                    // Load the manifest URI.
+                    await player.load('{{ $videoUrl }}');
                     console.log('The video has now been loaded!');
-                }).catch(onError);  // Handle asynchronous load errors.
+                } catch (error) {
+                    onError(error);
+                }
             }
 
             function onErrorEvent(event) {
