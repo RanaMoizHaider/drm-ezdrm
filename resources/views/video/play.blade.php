@@ -79,29 +79,19 @@
                 console.log('DRM type: ', drmType);
 
                 if (drmType === 'Widevine') {
-                    if (isAndroid()) {
-                        playerConfig = {
-                            drm: {
-                                servers: {
-                                    'com.widevine.alpha': widevineLicenseUrl
-                                },
-                                advanced: {
-                                    'com.widevine.alpha': {
-                                        'videoRobustness': 'HW_SECURE_DECODE',
-                                        'audioRobustness': 'HW_SECURE_CRYPTO'
-                                    }
+                    playerConfig = {
+                        drm: {
+                            servers: {
+                                'com.widevine.alpha': widevineLicenseUrl
+                            },
+                            advanced: {
+                                'com.widevine.alpha': {
+                                    'videoRobustness': 'HW_SECURE_DECODE',
+                                    'audioRobustness': 'HW_SECURE_CRYPTO'
                                 }
                             }
-                        };
-                    } else {
-                        playerConfig = {
-                            drm: {
-                                servers: {
-                                    'com.widevine.alpha': widevineLicenseUrl
-                                }
-                            }
-                        };
-                    }
+                        }
+                    };
                 } else if (drmType === 'Playready') {
                     // PlayReady configuration if needed
                     playerConfig = {
@@ -112,7 +102,7 @@
                         }
                     };
                 } else {
-                    console.error('No DRM configuration found.');
+                    alert('No DRM configuration found.');
                 }
 
                 // Configure the player
